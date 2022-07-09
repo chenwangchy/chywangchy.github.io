@@ -1,0 +1,53 @@
+html {
+    scroll-behavior: smooth;
+  }
+#campus{
+    width: 80%;
+    margin: 0.3rem auto;
+    text-align: center;
+}
+#campus h1 {
+    font-size: 2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+#campus p {
+    color: #777;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.7rem;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+#input {
+    width: 40%;
+    float: right;
+}
+
+
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+  }
+  .footer a{
+    text-decoration: none;
+  }
+.footer a:hover{
+    color: cornflowerblue;
+}
+  .footer h4 {
+    margin-block: 1.5rem;
+  }
+  
+  .footer p {
+    margin: auto;
+    width: 80%;
+  }
+  
+  .footer .fa-brands,
+  .footer .fa-regular {
+    font-size: 1.5rem;
+    color: #f44336;
+    margin-inline: 1rem;
+    cursor: pointer;
+    padding: 1.2rem 0;
+  }

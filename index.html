@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>学生管理系统登录</title>
+    <script src="js/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="forms-container">
+                <div class="signin-signup">
+                    <form action="#" class="sign-in-form">
+                        <h2 class="title">Admin登录</h2>
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" placeholder="用户名" v-model="admin.user" />
+                        </div>
+                        <div class="input-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" placeholder="密码" v-model="admin.password" />
+                        </div>
+                        <button @click="adminLogin()" class="btn solid">登录</button>
+                        <p class="social-text">或者通过以下平台登录</p>
+                        <div class="social-media">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-weixin"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-qq"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-alipay"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panels-container">
+                <div class="panel left-panel">
+                    <div class="content">
+                        <h2>学生管理系统</h2>
+                        <h3>作者：<el-tag>chy</el-tag></h3>
+                        <p>用户密码随便输入</p>
+                    </div>
+                    <img src="" class="image" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    admin: {
+                        user: '',
+                        password: ''
+                    }
+                }
+            },
+            mounted() {
+            },
+            methods: {
+                adminLogin() {
+                    this.$message({
+                        message: '验证通过！',
+                        type: 'success'
+                    });
+                    let user = this.admin.user;
+                    if(user=="") user="qige"
+                    setTimeout(function () {
+                        location.href = "html/admin.html";
+                    }, 1500);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

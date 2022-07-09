@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/element.min.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.15/lodash.core.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;400;900&family=Poppins&display=swap"
+    rel="stylesheet">
+  <script src="https://kit.fontawesome.com/fa79f509a7.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id="campus">
+            <h1>Student Admin</h1>
+            <p>欢迎您:{{userName}}</p>
+        </div>
+        <template>
+            <el-form :inline="true" :model="selectStudent" class="demo-form-inline">
+                <el-form-item label="学生姓名">
+                    <el-input v-model="selectStudent.name" placeholder="学生姓名"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="selectStudent.address" placeholder="地址"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="search()" class="el-icon-search">查询</el-button>
+                </el-form-item>
+            </el-form>
+            <el-row>
+                <el-button type="primary" @click="addFlag=true" class="el-icon-plus">新增</el-button>
+            </el-row>
+            <el-table :data="allStudent" height="350" border style="width: 100%">
+                <el-table-column prop="no" label="学生学号" align="center">
+                </el-table-column>
+                <el-table-column prop="name" label="学生姓名" align="center">
+                </el-table-column>
+                <el-table-column prop="age" label="年龄" align="center">
+                </el-table-column>
+                <el-table-column prop="phone" label="联系电话" align="center">
+                </el-table-column>
+                <el-table-column prop="address" label="地址" align="center">
+                </el-table-column>
+                <el-table-column align="center" label="操作">
+                    <el-row slot-scope="scope">
+                        <el-button type="primary" @click="update(scope.row)" class="el-icon-edit">修改</el-button>
+                        <el-button type="danger" @click="del(scope.row.no)" class="el-icon-delete">删除</el-button>
+                    </el-row>
+                </el-table-column>
+            </el-table>
+        </template>
+        <br><br>
+        <section class="footer">
+            <a href="report.html" target="_blank">关于我的结业报告</a>
+            <p><i class="fa fa-copyright" aria-hidden="true">曙光2001班陈洪洋</i></p>
+          </section>
+        <div>
+            <el-dialog title="添加学生信息" :visible.sync="addFlag" width="30%">
+                <el-form ref="form" :model="addStudent" label-width="80px">
+                    <el-form-item label="学生学号">
+                        <el-input v-model="addStudent.no"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学生姓名">
+                        <el-input v-model="addStudent.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="年龄">
+                        <el-input-number v-model="addStudent.age" min="10" max="120"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="学生住址">
+                        <el-input v-model="addStudent.address"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系电话">
+                        <el-input v-model="addStudent.phone"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="newAddStudent()">提交</el-button>
+                        <el-button @click="addFlag=false">取消</el-button>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer"></span>
+            </el-dialog>
+        </div>
+        <div>
+            <el-dialog title="修改学生" :visible.sync="updateFlag" width="30%">
+                <el-form ref="form" :model="updateStudent" label-width="80px">
+                    <el-form-item label="学生姓名">
+                        <el-input v-model="updateStudent.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系电话">
+                        <el-input v-model="updateStudent.phone"></el-input>
+                    </el-form-item>
+                    <el-form-item label="住址">
+                        <el-input v-model="updateStudent.address"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="newUpdateStudent()">确定</el-button>
+                        <el-button @click="updateFlag=false">取消</el-button>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer"></span>
+            </el-dialog>
+        </div>
+        <div>
+            <el-dialog title="查询结果" :visible.sync="searchFlag" width="80%"  @close="refrseh()">
+                <el-table :data="searchStudent" border>
+                    <el-table-column prop="no" label="学生学号" align="center">
+                    </el-table-column>
+                    <el-table-column prop="name" label="学生姓名" align="center">
+                    </el-table-column>
+                    <el-table-column prop="age" label="年龄" align="center">
+                    </el-table-column>
+                    <el-table-column prop="phone" label="联系电话" align="center">
+                    </el-table-column>
+                    <el-table-column prop="address" label="地址" align="center">
+                    </el-table-column>
+                </el-table>
+                <span slot="footer" class="dialog-footer"></span>
+            </el-dialog>
+        </div>
+    </div>
+    <script>
+
+        //检查是否包含字串
+        function fuzzyQuery(string, keyWord) {
+            if (string.indexOf(keyWord) >= 0) {
+                return true;
+            }
+            return false;
+        }
+        //检查当前对象是否在查询数组中
+        function check(list, no) {
+            list.forEach(e => {
+                if (e.no == no) return false;
+            });
+            return true;
+        }
+        let vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    allStudent: [{
+                        no: "63201",
+                        name: "张明",
+                        age: 18,
+                        address: "重庆市江津区",
+                        phone: "18166477059"
+                    }, {
+                        no: "63202",
+                        name: "李白",
+                        age: 18,
+                        address: "重庆市江津区",
+                        phone: "18166477059"
+                    }, {
+                        no: "63203",
+                        name: "陈洪洋",
+                        age: 18,
+                        address: "重庆市江津区",
+                        phone: "18166477059"
+                    }, {
+                        no: "63204",
+                        name: "勇哥",
+                        age: 18,
+                        address: "重庆市南岸区",
+                        phone: "18166477059"
+                    }, {
+                        no: "63205",
+                        name: "棋歌",
+                        age: 18,
+                        address: "重庆市江津区",
+                        phone: "18166477059"
+                    }],
+                    selectStudent: {},
+                    addFlag: false,
+                    updateFlag: false,
+                    searchFlag: false,
+                    addStudent: {
+                    },
+                    updateStudent: {},
+                    searchStudent: Array(),
+                    userName: "qige"
+                }
+            },
+            mounted() {
+            },
+            methods: {
+                refrseh(){
+                    this.searchStudent = [];
+                },
+                search(){
+                    this.searchFlag = true;
+                    if(this.selectStudent.name=="" && this.selectStudent.address == ""){
+                        this.searchStudent = [];
+                        return;
+                    } 
+                    let arr = this.allStudent;
+                    arr.forEach(e=>{
+                        if(fuzzyQuery(e.name,this.selectStudent.name) && check(this.searchStudent,e.no)){
+                            this.searchStudent.push(_.clone(e));
+                        }
+                        if(fuzzyQuery(e.address,this.selectStudent.address) && check(this.searchStudent,e.no)){
+                            this.searchStudent.push(_.clone(e));
+                        }
+                    })
+                },
+                del(no) {
+                    let index = 0;
+                    for (let i = 0; i < this.allStudent.length; i++) {
+                        if (this.allStudent[i].no == no) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    this.$confirm('此操作将删除该学生, 是否继续?', '警告', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.allStudent.splice(index, 1);
+                        this.$message({
+                            message: '删除成功！',
+                            type: 'success',
+                            duration: 1000
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                update(row) {
+                    this.updateFlag = true;
+                    this.updateStudent = _.clone(row);
+                },
+                newUpdateStudent() {
+                    let no = this.updateStudent.no;
+                    let index = 0;
+                    if (this.updateStudent.name == "") {
+                        this.$message({
+                            message: '姓名不能为空！',
+                            type: 'warning',
+                            duration: 1000
+                        });
+                        return;
+                    }
+                    for (let i = 0; i < this.allStudent.length; i++) {
+                        if (no == this.allStudent[i].no) {
+                            index = i; break;
+                        }
+                    }
+                    this.allStudent[index].name = this.updateStudent.name;
+                    this.allStudent[index].address = this.updateStudent.address;
+                    this.allStudent[index].phone = this.updateStudent.phone;
+                    this.$message({
+                        message: '修改成功！',
+                        type: 'success',
+                        duration: 1000
+                    });
+                    this.updateFlag = false;
+
+                },
+                newAddStudent() {
+                    let no = this.addStudent.no;
+                    let name = this.addStudent.name;
+                    for (let i = 0; i < this.allStudent.length; i++) {
+                        if (no == this.allStudent[i].no) {
+                            this.$message({
+                                message: '学号重复！',
+                                type: 'error',
+                                duration: 1000
+                            });
+                            return;
+                        }
+                        if (name == "") {
+                            this.$message({
+                                message: '姓名不能为空！',
+                                type: 'warning',
+                                duration: 1000
+                            });
+                            return;
+                        }
+                    }
+                    this.allStudent.push(this.addStudent);
+                    this.$message({
+                        message: '添加成功！',
+                        type: 'success'
+                    });
+                    this.addFlag = false;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
